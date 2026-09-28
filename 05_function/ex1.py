@@ -6,14 +6,16 @@
 
 
 def add(a, b):
-    return a + b
+    """a + b 결과를 반환한다."""
+    return a + b  # __add__() 호출
 
 
 print(add(3, 4))
 print(add("hello", "python"))
-print([1, 2], [3, 4])
-print((1, 2), (3, 4))
+print(add([1, 2], [3, 4]))
+print(add((1, 2), (3, 4)))
 print(add.__doc__)
+
 # ===========================================================
 # 2. 튜플을 리턴하는 함수
 # ===========================================================
@@ -29,19 +31,20 @@ print(*add_sub(5, 3))
 x, y = add_sub(5, 3)
 print(x, y)
 
-
 # ===========================================================
 # 3. 디폴트 매개변수 (Default Parameter)
 # ===========================================================
 # 매개변수에 기본값을 지정하면, 호출 시 해당 인자를 생략할 수 있다.
 # 디폴트 매개변수는 항상 일반 매개변수 뒤에 위치해야 한다.
-def add(a, b=0):
+
+
+def add(a=0, b=0):
     return a + b
 
 
 print(add(5, 10))
 print(add(5))
-# print(add())
+print(add())
 
 # ===========================================================
 # 4. 키워드 인자 (Keyword Argument)
@@ -49,16 +52,18 @@ print(add(5))
 # 인자를 순서가 아니라 "매개변수명=값" 형태로 전달할 수 있다.
 # 순서를 바꿔서 호출해도 이름만 맞으면 정확히 전달된다.
 
-print(add(5, 10))
-print(add(b=5, a=10))
+print(add(5, 10))  # 순서대로 인자 전달
+print(add(b=10, a=5))  # 키워드 인자로 매핑
 
 
-def introduce(name, age, city):
-    return f"나는 {name}이고 {age}살 이며 {city}에서 왔어요"
+def introduce(name, age, city="안산"):
+    return f"저는 {name}이고, {age}살이며 {city}에 살아요"
 
 
-print(introduce("료슈", "22", "거미집"))
-print(introduce(city="거미집", name="료슈", age="22"))
+print(introduce("뽀로로", 5, "일산"))
+print(introduce(name="뽀로로", age=5, city="일산"))
+print(introduce("뽀로로", 5))
+
 # ===========================================================
 # 5. 가변 인자 (Variable-length Argument, *args)
 # ===========================================================
@@ -71,6 +76,7 @@ def add_all(*args):
     return sum(args)
 
 
+print(add_all(1, 2, 3))
 print(add_all(1, 2, 3, 4, 5))
 
 # ================================================================
@@ -80,13 +86,17 @@ print(add_all(1, 2, 3, 4, 5))
 # kwargs라는 이름으로 입력값들을 모아 딕셔너리로 만든다.
 
 
-def introduce(**kwargs):
+def introduce2(**kwargs):
     print(kwargs)
 
 
 d = {"name": "크롱", "age": 4, "kind": "공룡"}
-introduce(name="크롱", age="4", kind="공룡")
-introduce(**d)
+
+introduce2(name="크롱", age=4, kind="공룡", home="뽀로로 집")
+introduce2(**d)
+
+a = [1, 2, 3]
+print(add_all(*a))
 
 # ===========================================================
 # 7. *args와 **kwargs를 함께 사용하는 예시
@@ -97,11 +107,11 @@ introduce(**d)
 # - 길 가다가 주운 돈 : 100원, 200원 => 가변인자 (튜플)
 # - 아빠한테 받은 돈 : 10000원
 # - 엄마한테 받은 돈 : 5000원 => 키워드 가변인자 (딕셔너리)
+# 15800원
 
 
-def pocket_money(rest, *get, father, **mother):
-    return rest + sum(get) + father + mother["엄마"]
+def pocket_money(last_month, *args, **kwargs):
+    return last_month + sum(args) + sum(kwargs.values())
 
 
-m_money = {"엄마": 5000}
-print(pocket_money(500, 100, 200, father=10000, **m_money))
+print(pocket_money(500, 100, 200, dad=10000, mom=5000, uncle=50000))
