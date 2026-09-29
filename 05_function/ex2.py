@@ -110,6 +110,12 @@ students = [
     {"name": "포비", "score": 78},
 ]
 
+# 이름 순으로 정렬
+print(sorted(students, key=lambda x: x["name"]))
+
+# 점수 순으로 정렬
+print(sorted(students, key=lambda x: x["score"]))
+
 # =========================================================
 #  🔥 실습 문제
 # =========================================================
@@ -117,26 +123,41 @@ students = [
 # 1️⃣ n이 짝수면 True, 홀수면 False를 반환하는 함수 작성하기
 
 
-# print(is_even(4))                           # ✅ True
-# print(is_even(7))                           # ✅ False
+def is_even(n):
+    if n % 2:
+        return False
+    return True
+
+
+print(is_even(4))  # ✅ True
+print(is_even(7))  # ✅ False
 
 
 # 2️⃣ 가변 인자로 여러 숫자를 받아 (최소값, 최대값, 합계, 평균) 튜플 리턴하기
 
 
-# print(num_info(4, 8, 1, 9, 3))              # ✅ (1, 9, 25, 5.0)
+def num_info(*args):
+    return (min(args), max(args), sum(args), sum(args) / len(args))
+
+
+print(num_info(4, 8, 1, 9, 3))  # ✅ (1, 9, 25, 5.0)
 
 
 # 3️⃣ 이름과 키워드 가변 인자로 받은 정보로 아래와 같이 문자열을 만들어 리턴하기
 
 
-# print(introduce("카리나", age=26, team="에스파", hometown="수원"))
+def introduce(name, **kwargs):
+    info = [f"{k} : {v}" for k, v in kwargs.items()]
+    return " / ".join([name] + info)
+
+
+print(introduce("카리나", age=26, team="에스파", hometown="수원"))
 # ✅ 카리나 / age: 26 / team: 에스파 / hometown: 수원
 
-# print(introduce("장원영", age=22, team="아이브", bloodtype="O형"))
+print(introduce("장원영", age=22, team="아이브", bloodtype="O형"))
 # ✅ 장원영 / age: 22 / team: 아이브 / bloodtype: O형
 
-# print(introduce("성현", age=17, team="코르티스"))
+print(introduce("성현", age=17, team="코르티스"))
 # ✅ 성현 / age: 17 / team: 코르티스
 
 
@@ -145,4 +166,15 @@ students = [
 
 import time
 
-# countdown(5)                        # ✅ 5 -> 4 -> 3 -> 2 -> 1 -> 로켓 발사
+
+def countdown(n):
+    if n == 0:
+        print("로켓 발사")
+        return
+
+    print(n)
+    time.sleep(1)
+    countdown(n - 1)
+
+
+countdown(5)  # ✅ 5 -> 4 -> 3 -> 2 -> 1 -> 로켓 발사
