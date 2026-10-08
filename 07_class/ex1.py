@@ -38,6 +38,8 @@
 #  - 형식) class 클래스명:
 #  - 클래스 이름은 첫 글자를 대문자로 쓴다. (이후 CamelCase)
 # ===========================================================
+
+
 class Dog:
     pass
 
@@ -57,16 +59,16 @@ print(d1 is d2)
 
 # 어떤 클래스의 객체인지 확인하기
 print(isinstance(d1, Dog))
+print(isinstance(d2, Dog))
 
 # 파이썬의 자료형은 클래스로 만들어져 있고, 자료형에 해당하는 객체를 생성함
 print(type(10), isinstance(10, int))
 print(type("hi"), isinstance("hi", str))
 print(type([1, 2]), isinstance([1, 2], list))
 
-
 # 빈 객체에 속성 추가 (비권장)
-d1.name = "보니"
-d2.name2 = "뫼르소"
+d1.name = "뭉이"
+d2.name2 = "뽀삐"
 
 print(d1.name, d2.name2)
 
@@ -75,59 +77,75 @@ print(d1.name, d2.name2)
 
 # ===========================================================
 #  5. 생성자 (Constructor)
-#  - 객체가 생성될 때 ( 자동으로 호출 )되는 특별한 메소드
+#  - 객체가 생성될 때 ( 자동으로 )되는 특별한 메소드
 #  - 이름은 반드시 ( __init__ )
-#  - 객체가 가져야 하는 속성의 ( 초기값 )을 설정하는 데 사용
+#  - 객체가 가져야 하는 속성의 ( 초깃값 )을 설정하는 데 사용
 # ===========================================================
+
+
 class Dog:
     def __init__(self):
+        print("생성자 호출")
         print(self)
 
 
 d1 = Dog()
+print(d1)
+
+
 # ===========================================================
 #  6. self와 인스턴스 변수
 #  - self: 메소드를 호출한 ( 객체 자기 자신 )을 가리키는 변수 (관례적 이름)
 #  - 인스턴스 변수: 각 객체가 개별적으로 가지는 독립적인 변수
 #  - 객체명.변수명(클래스 밖), self.변수명으로 접근(클래스 내)
-#  -> 인스턴스 변수는 반드시 ( 객체  )를 생성한 후 사용 가능
+#  -> 인스턴스 변수는 반드시 ( 객체 )를 생성한 후 사용 가능
 # ===========================================================
 
 
 class Dog:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+    # 생성자 역할 : 객체를 초기화
+    # 인스턴스 변수 초기화, 객체 생성시 실행되어야 하는 로직 구현 (설정 파일 로드, DB 로직 구현)
+    def __init__(self, name, age):  # 초기값 설정
+        self.name = name  # self.name : 인스턴스 변수, name : 매개변수
+        if age < 0:
+            self.age = 0
+        else:
+            self.age = age
 
-    def bark(self):
-        print(f"{self.name} 멍멍!!!!!!!!!!!!")
+    def bark(self):  # 인스턴스 메소드
+        print(f"{self.name} 멍멍")
+
+    def introduce(self):
+        print(f"{self.name}(이)고 {self.age}세 입니다.")
 
 
-d1 = Dog("보니", 14)
+d1 = Dog("뭉이", 6)
 print(d1.name, d1.age)
 
-
-d2 = Dog("뽀삐", 8)
+d2 = Dog("뽀삐", 4)
 print(d2.name, d2.age)
 
-d1.name = "댕댕이"
+d1.name = "멍멍이"
 print(d1.name, d2.name)
 
 # ===========================================================
 #  7. 인스턴스 메소드
 #  - 인스턴스 변수에 접근하거나 다른 인스턴스 메소드를 호출할 수 있다.
-#  - 모든 인스턴스 메소드의 첫 번째 매개변수는 ( self )로 작성한다.
+#  - 모든 인스턴스 메소드의 첫 번째 매개변수는 (  )로 작성한다.
 # ===========================================================
 
 # 인스턴스 메소드 호출
 d1.bark()
 d2.bark()
 
+d1.introduce()
+d2.introduce()
+
 # ===========================================================
 #  8. 클래스 변수
-#  - 객체가 아닌 클래스에 소속되어 모든 객체가 (  )하는 변수
+#  - 객체가 아닌 클래스에 소속되어 모든 객체가 ( 공유 )하는 변수
 #  - 클래스 내부의 메소드 밖에 선언
-#  - (  )으로 접근 (객체명.변수명으로도 읽을 수는 있으나 비권장)
+#  - ( 클래스명.변수명 )으로 접근 (객체명.변수명으로도 읽을 수는 있으나 비권장)
 #
 #  (중요) 인스턴스 변수 vs 클래스 변수
 #  - 인스턴스 변수 : self.변수명 / 객체마다 다른 값
@@ -135,29 +153,56 @@ d2.bark()
 # ===========================================================
 
 
-# 객체 생성 없이도 클래스 변수 사용 가능
+class Dog:
+    species = "개"  # 클래스 변수
+    count = 0
 
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        Dog.count += 1
+
+    # 클래스 메소드
+    # 데코레이터 : 기존 함수를 직접 수정하지 않고 함수에 기능을 추가하는 방법
+    @classmethod
+    def show_count(cls):
+        print(cls)
+        return f"현재 {Dog.species}의 수는 총 {Dog.count}입니다"
+
+
+# 객체 생성 없이도 클래스 변수 사용 가능
+print(Dog.species)
+
+d1 = Dog("초코", 3)
+d2 = Dog("보리", 5)
+
+print(d1.species, d2.species)
 
 # 클래스 변수를 바꾼 경우 아래 결과는?
+Dog.species = "늑대"
+print(d1.species, d2.species)
 
 
 # 주의) 객체를 사용하여 클래스 변수의 값을 변경한다면?
 # -> 클래스 변수가 바뀌는 게 아니라, 그 객체에 같은 이름의 인스턴스 변수가 새로 생긴다.
 # -> 클래스 변수는 클래스명.변수명으로 사용하기
+d1.species = "멍멍이"
+print(d1.species, d2.species)
 
 
 # Dog 클래스로 만든 전체 객체 수 세기
-
+print(Dog.count)
 
 # 클래스 메소드 호출: 클래스명.메소드명
-
+print(d1.show_count())
+print(Dog)
 
 # ===========================================================
 # 문제)
-#  1. 클래스 메소드에서 self를 쓸 수 있을까? (  )
+#  1. 클래스 메소드에서 self를 쓸 수 있을까? ( X )
 #  2. 메소드에서 변수 접근 허용 범위
-#   - 인스턴스 메소드에서 인스턴스 변수 사용 (  ), 클래스 변수 사용 (  )
-#   - 클래스 메소드에서 인스턴스 변수 사용 (  ), 클래스 변수 사용 (  )
+#   - 인스턴스 메소드에서 인스턴스 변수 사용 ( O ), 클래스 변수 사용 ( O )
+#   - 클래스 메소드에서 인스턴스 변수 사용 ( X ), 클래스 변수 사용 ( O )
 # ===========================================================
 
 
@@ -168,7 +213,23 @@ d2.bark()
 
 # Student Class 작성하기
 class Student:
-    pass
+    school = "디미고"
+    cnt = 0
+
+    def __init__(self, num, name):
+        self.num = num
+        self.name = name
+        Student.cnt += 1
+
+    def introduce(self):
+        print(f"저는 {self.num} {self.name} 입니다.")
+
+    def introduce2(self):
+        print(f"저는 {Student.school}에 재학 중인 {self.num} {self.name} 입니다.")
+
+    @classmethod
+    def get_std_cnt(cls):
+        return cls.cnt
 
 
 # 1️⃣ 인스턴스 변수: num(학번), name(이름) -> 생성자 구현
@@ -176,22 +237,22 @@ class Student:
 
 # 2️⃣ 객체 생성: 생성자 호출
 
-# s1 = Student(1301, "뽀로로")
-# s2 = Student(1401, "크롱")
+s1 = Student(1301, "뽀로로")
+s2 = Student(1401, "크롱")
 
 
 # 3️⃣ 인스턴스 메소드: introduce() 구현
 
-# s1.introduce()                  # 저는 1301 뽀로로 입니다.
-# s2.introduce()                  # 저는 1401 크롱 입니다.
+s1.introduce()  # 저는 1301 뽀로로 입니다.
+s2.introduce()  # 저는 1401 크롱 입니다.
 
 
 # 4️⃣ 클래스 변수: school = "디미고" 추가 -> 인스턴스 메소드: introduce2() 구현
 
-# s1.introduce2()                 # 저는 디미고에 재학중인 1301 뽀로로 입니다.
-# s2.introduce2()                 # 저는 디미고에 재학중인 1401 크롱 입니다.
+s1.introduce2()  # 저는 디미고에 재학중인 1301 뽀로로 입니다.
+s2.introduce2()  # 저는 디미고에 재학중인 1401 크롱 입니다.
 
 
 # 5️⃣ 클래스 메소드: get_std_cnt() 구현 (총 학생 수 리턴)
 
-# print(f"총 학생 수: {Student.get_std_cnt()}명")   # 총 학생 수: 2명
+print(f"총 학생 수: {Student.get_std_cnt()}명")  # 총 학생 수: 2명
